@@ -1,9 +1,26 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Couverts Semences Calculator App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="styles.css">
+    <title>PWA Cover Crop Seed Calculator</title>
 </head>
 <body>
-    <h1>Welcome to the Couverts Semences Calculator App</h1>
-    <p>Use this app to calculate the required seeds for your couverts.</p>
+    <div id="app">
+        <h1>Cover Crop Seed Calculator</h1>
+        <form id="calculator">
+            <label for="area">Area (acres):</label>
+            <input type="number" id="area" required>
+
+            <label for="rate">Seed Rate (lbs/acre):</label>
+            <input type="number" id="rate" required>
+
+            <button type="submit">Calculate</button>
+        </form>
+        <div id="result"></div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
