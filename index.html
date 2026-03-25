@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Couverts">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#2d5a27">
+<meta name="format-detection" content="telephone=no">
+<title>Couverts - Calculateur</title>
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAMAAAAKE/YAAAAASFBMVEX/////+/L/+/Lw8O4tWicAAAAAABstWif/+/IAAAAtWicAAAAtWictWictWidAAAtWif/+/ItWictWicAAAAAAAD/+/ItWif///8RhKjkAAAAGHRSTlMAABAQICAwQEBQUGBwcICPn5+vv8/f7+8OYGW+AAAAoElEQVR4Ae3QAQ0AIAwAMDaG///XFYSmbRIAAAAAAAAA8Ldcq2+7Z+/ep/mNGjVq1KhRo0aNGjVq1KhRo0aNGjVq1KhRo0aNGjVq1KhRo0b9B+puv0aNGjVq1KhRo0aNGjVq1KhRo0aN+mQ16v8+jRo1atSoUaNGjRo1atSoUaNGjRo1atSoUaNGjRo1atSoUaNGjRo1atTfqwG0MxQUfPSQJAAAAABJRU5ErkJggg==">
+<script>
+var manifest = {name:"Couverts Vegetaux",short_name:"Couverts",description:"Calculateur de semences",start_url:location.href,display:"standalone",background_color:"#f5f2eb",theme_color:"#2d5a27",orientation:"portrait"};
+var b = new Blob([JSON.stringify(manifest)], {type:'application/json'});
+var l = document.createElement('link'); l.rel='manifest'; l.href=URL.createObjectURL(b);
+document.head.appendChild(l);
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#f5f2eb;--surface:#fff;--border:#e5e2db;--border-strong:#c8c3b8;--text:#1a1714;--text-mid:#5a5550;--text-light:#9a9590;--green:#2d5a27;--green-light:#e8f0e6;--green-mid:#4a8a42;--amber:#8a6420;--amber-light:#fdf3e0;--red:#8a2020;--red-light:#fde8e8;--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
+html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;min-height:100dvh;padding:0;overscroll-behavior:none;-webkit-font-smoothing:antialiased}
+.top-bar{position:sticky;top:0;z-index:100;background:var(--green);padding:calc(var(--safe-top) + 10px) 16px 12px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 8px rgba(0,0,0,.15)}
+.top-bar-icon{width:36px;height:36px;background:rgba(255,255,255,.2);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.top-bar-icon svg{width:22px;height:22px;fill:#fff}
+.top-bar h1{color:#fff;font-size:1.15rem;font-weight:700;line-height:1.2}
+.top-bar h1 small{display:block;font-size:.7rem;font-weight:400;opacity:.7}
+.tab-bar{display:flex;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:90;padding:0 8px}
+.tab-btn{flex:1;padding:12px 8px;text-align:center;font-size:.78rem;font-weight:600;color:var(--text-light);background:none;border:none;border-bottom:3px solid transparent;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.tab-btn.active{color:var(--green);border-bottom-color:var(--green)}
+.tab-btn:active{opacity:.6}
+.page{display:none;padding:16px;padding-bottom:calc(var(--safe-bottom) + 24px)}
+.page.active{display:block;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--surface);border-radius:14px;overflow:hidden;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04)}
+.card-head{padding:14px 16px;font-size:.8rem;font-weight:700;display:flex;align-items:center;gap:10px;color:#fff}
+.card-head.green{background:var(--green)}.card-head.amber{background:var(--amber)}.card-head.dark{background:var(--text)}
+.card-head svg{flex-shrink:0}
+.card-body{padding:16px}
+.surf-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.surf-row label{font-size:.82rem;color:var(--text-mid);font-weight:600}
+.surf-row input{width:80px;font-family:'SF Mono','Menlo',monospace;font-size:1.1rem;font-weight:600;padding:8px 12px;border:2px solid var(--border);border-radius:10px;background:#fff;color:var(--text);text-align:center;-webkit-appearance:none}
+.surf-row input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(45,90,39,.15)}
+.surf-row .unit{font-size:.85rem;color:var(--text-mid);font-weight:600}
+.sp-item{padding:14px 0;border-bottom:1px solid var(--border)}
+.sp-item:last-child{border-bottom:none}
+.sp-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.sp-name{font-weight:700;font-size:.92rem;color:var(--text)}
+.sp-ref{font-size:.72rem;color:var(--text-light);font-family:'SF Mono','Menlo',monospace;margin-top:2px}
+.badge{font-size:.62rem;font-weight:600;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.badge-opt{background:var(--amber-light);color:var(--amber)}.badge-ex{background:var(--red-light);color:var(--red)}
+.sp-inputs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+.sp-field{text-align:center}
+.sp-field-label{font-size:.65rem;color:var(--text-light);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px;font-weight:600}
+.num-in{width:100%;font-family:'SF Mono','Menlo',monospace;font-size:.95rem;font-weight:600;padding:8px;border:1.5px solid var(--border);border-radius:10px;background:#fff;color:var(--text);text-align:center;-webkit-appearance:none}
+.num-in:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(45,90,39,.1)}
+.sac-in{width:100%;font-family:'SF Mono','Menlo',monospace;font-size:.95rem;font-weight:600;padding:8px;border:1.5px solid var(--amber);border-radius:10px;background:var(--amber-light);color:var(--amber);text-align:center;-webkit-appearance:none}
+.sac-in:focus{outline:none;box-shadow:0 0 0 3px rgba(138,100,32,.15)}
+.sp-results{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.res-box{background:var(--green-light);border-radius:10px;padding:8px;text-align:center}
+.res-box-label{font-size:.62rem;color:var(--green);text-transform:uppercase;letter-spacing:.04em;font-weight:600;margin-bottom:2px}
+.res-box-value{font-family:'SF Mono','Menlo',monospace;font-size:.95rem;font-weight:700;color:var(--green)}
+.radio-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.radio-chip{font-size:.75rem;font-weight:600;padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;color:var(--text-mid);cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.radio-chip input{display:none}
+.radio-chip.selected{background:var(--green);color:#fff;border-color:var(--green)}
+.subtotals{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;padding-top:16px;border-top:2px solid var(--border)}
+.st-box{background:var(--green-light);border-radius:12px;padding:12px;text-align:center}
+.st-label{font-size:.68rem;color:var(--green);text-transform:uppercase;letter-spacing:.04em;font-weight:600;margin-bottom:4px}
+.st-value{font-size:1.2rem;font-weight:800;color:var(--green);font-family:'SF Mono','Menlo',monospace}
+.recap-item{background:var(--surface);border-radius:12px;padding:14px 16px;margin-bottom:8px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.recap-item .ri-name{font-weight:700;font-size:.88rem;color:var(--text)}
+.recap-item .ri-details{font-size:.72rem;color:var(--text-light);font-family:'SF Mono','Menlo',monospace;margin-top:2px}
+.recap-item .ri-sacs{font-family:'SF Mono','Menlo',monospace;font-size:1.1rem;font-weight:800;color:var(--green);text-align:right}
+.grand-total{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.gt-box{background:var(--text);border-radius:14px;padding:18px 16px;text-align:center}
+.gt-label{font-size:.68rem;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.06em;font-weight:600;margin-bottom:6px}
+.gt-value{font-size:1.5rem;font-weight:800;color:#fff;font-family:'SF Mono','Menlo',monospace}
+.gt-value.green{color:#7ec87a}
+.action-btn{display:block;width:100%;padding:16px;background:var(--green);color:#fff;border:none;border-radius:14px;font-size:.92rem;font-weight:700;cursor:pointer;margin-top:16px;-webkit-tap-highlight-color:transparent;transition:transform .1s,opacity .1s}
+.action-btn:active{transform:scale(.97);opacity:.9}
+.action-btn.secondary{background:var(--surface);color:var(--text);border:1.5px solid var(--border);margin-top:10px}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text-light);font-size:.88rem}
+@media print{.top-bar,.tab-bar,.action-btn{display:none}.page{display:block!important;padding:8px}.card{box-shadow:none;border:1px solid #ddd;break-inside:avoid}body{background:#fff}}
+.install-banner{background:linear-gradient(135deg,var(--green),#3a7a32);margin:16px;border-radius:14px;padding:16px;color:#fff;display:none}
+.install-banner h3{font-size:.92rem;margin-bottom:4px}
+.install-banner p{font-size:.75rem;opacity:.85;line-height:1.4}
+.install-banner .dismiss{background:rgba(255,255,255,.2);border:none;color:#fff;padding:8px 16px;border-radius:8px;font-size:.78rem;font-weight:600;margin-top:10px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="top-bar"><div class="top-bar-icon"><svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20C19 20 22 3 22 3c-1 2-8 2-13 6 5-3 10-3.5 13-3.5"/></svg></div><div><h1>Couverts vegetaux<small>Calculateur de semences</small></h1></div></div>
+<div class="install-banner" id="installBanner"><h3>Installer l'application</h3><p>Appuyez sur le bouton Partager <svg width="14" height="14" viewBox="0 0 24 24" fill="white" style="vertical-align:middle"><path d="M16 5l-1.42 1.42-1.59-1.59V16h-2V4.83L9.42 6.42 8 5l4-4 4 4zM20 10v11c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2V10c0-1.1.9-2 2-2h3v2H6v11h12V10h-3V8h3c1.1 0 2 .9 2 2z"/></svg> puis "Sur l'ecran d'accueil"</p><button class="dismiss" onclick="this.parentElement.style.display='none';localStorage.setItem('installDismissed','1')">Compris</button></div>
+<div class="tab-bar"><button class="tab-btn active" onclick="showPage('c1',this)">Avant betterave</button><button class="tab-btn" onclick="showPage('c2',this)">Avant feverole</button><button class="tab-btn" onclick="showPage('recap',this)">Recapitulatif</button></div>
+
+<div class="page active" id="page-c1"><div class="card"><div class="card-head green"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 17.93V18a1 1 0 0 0-2 0v1.93A8 8 0 0 1 4.07 13H6a1 1 0 0 0 0-2H4.07A8 8 0 0 1 11 4.07V6a1 1 0 0 0 2 0V4.07A8 8 0 0 1 19.93 11H18a1 1 0 0 0 0 2h1.93A8 8 0 0 1 13 19.93z"/></svg>Couvert 1 — Avant betterave</div><div class="card-body">
+<div class="surf-row"><label>Surface</label><input type="number" id="surf1" value="1" min="0.1" step="0.1" inputmode="decimal" oninput="calc()"><span class="unit">ha</span></div>
+<div class="sp-item"><div class="sp-header"><div><div class="sp-name">Avoine rude / bresilienne</div><div class="sp-ref">ref : 10 kg/ha</div></div></div><div class="sp-inputs"><div class="sp-field"><div class="sp-field-label">kg/ha</div><input type="number" class="num-in" id="avoine" value="10" min="0" step="0.5" inputmode="decimal" oninput="calc()"></div><div class="sp-field"><div class="sp-field-label">Sac (kg)</div><input type="number" class="sac-in" id="sac_avoine" value="25" min="1" step="1" inputmode="numeric" oninput="calc()"></div><div class="sp-field"><div class="sp-field-label">Total</div><div class="res-box"><div class="res-box-value" id="avoine_kg">--</div></div></div></div><div class="sp-results"><div class="res-box"><div class="res-box-label">Nb sacs</div><div class="res-box-value" id="avoine_sac">--</div></div><div class="res-box"><div class="res-box-label">Reliquat</div><div class="res-box-value" id="avoine_reste">--</div></div><div></div></div></div>
+<div class="sp-item"><div class="sp-header"><div><div class="sp-name">Vesce velue ou commune</div><div class="sp-ref">ref : 10-15 kg/ha</div></div></div><div class="sp-inputs"><div class="sp-field"><div class="sp-field-label">kg/ha</div><input type="number" class="num-in" id="vesce" value="12" min="0" step="0.5" inputmode="decimal" oninput="calc()"></div><div class="sp-field"><div class="sp-field-label">Sac (kg)</div><input type="number" class="sac-in" id="sac_vesce" value="25" min="1" step="1" inputmode="numeric" oninput="calc()"></div><div class="sp-field"><div class="sp-field-label">Total</div><div class="res-box"><div class="res-box-value" id="vesce_kg">--</div></div></div></div><div class="sp-results"><div class="res-box"><div class="res-box-label">Nb sacs</div><div class="res-box-value" id="vesce_sac">--</div></div><div class="res-box"><div class="res-box-label">Reliquat</div><div class="res-box-value" id="vesce_reste">--</div></div><div></div></div></div>
+<div class="sp-item"><div class="sp-header"><div><div class="sp-name">Phacelie</div><div class="sp-ref">ref : 3 kg/ha</div></div></div><div class="sp-inputs"><div class="sp-field"><div class="sp-field-label">kg/ha</div><input type="number" class="num-in" id="phacelie1" value="3" min="0" step="0.5" inputmode="decimal" oninput="calc()"></div><div class="sp-field"><div class="sp-field-label">Sac (kg)</div><input type="number" class="sac-in" id="sac_phacelie1" value="10" min="1" step="1" inputmode="numeric" oninput="calc()"></div><div class="sp-field"><div class="sp-field-label">Total</div><div class="res-box"><div class="res-box-value" id="phacelie1_kg">--</div></div></div></div><div class="sp-results"><div class="res-box"><div class="res-box-label">Nb sacs</div><div class="res-box-value" id="phacelie1_sac">--</div></div><div class="res-box"><div class="res-box-label">Reliquat</div><div class="res-box-value" id="phacelie1_reste">--</div></div><div></div></div></div>
+<div class="sp-item"><div class="sp-header"><div><div class="sp-name">Crucifere</div></div><span class="badge badge-ex">1 seul choix</span></div><div class="radio-row"><label class="radio-chip selected" onclick="selectCruc(this,2)"><input type="radio" name="cruc" value="2" checked> Radis chinois 2 kg/ha</label><label class="radio-chip" onclick="selectCruc(this,1)"><input type="radio" name="cruc" value="1"> Navette 1 kg/ha</label></div><div class="sp-inputs" style="margin-top:10px"><div class="sp-field"><div class="sp-field-label">kg/ha</div><input type="number" class="num-in" id="cruc" value="2" min="0" step="0.5" inputmode="decimal" oninput="calc()"></div><div class="sp-field"><div class="sp-field-label">Sac (kg)</div><input type="number" class="sac-in" id="sac_cruc" value="10" min="1" step="1" inputmode="numeric" oninput="calc()"></div><div class="sp-field"><div class="sp-field-label">Total</div><div class="res-box"><div class="res-box-value" id="cruc_kg">--</div></div></div></div><div class="sp-results"><div class="res-box"><div class="res-box-label">Nb sacs</div><div class="res-box-value" id="cruc_sac">--</div></div><div class="res-box"><div class="res-box-label">Reliquat</div><div class="res-box-value" id="cruc_reste">--</div></div><div></div></div></div>
+<div class="sp-item"><div class="sp-header"><div><div class="sp-name">Niger</div><div class="sp-ref">ref : 3 kg/ha</div></div><span class="badge badge-opt">option</span></div><div class="sp-inputs"><div class="sp-field"><div class="sp-field-label">kg/ha</div><input type="number" class="num-in" id="niger1" value="0" min="0" step="0.5" inputmode="decimal" oninput="calc()"></div><div class="sp-field"><div class="sp-field-label">Sac (kg)</div><input type="number" class="sac-in" id="sac_niger1" value="10" min="1" step="1" inputmode="numeric" oninput="calc()"></div><div class="sp-field"><div class="sp-field-label">Total</div><div class="res-box"><div class="res-box-value" id="niger1_kg">--</div></div></div></div><div class="sp-results"><div class="res-box"><div class="res-box-label">Nb sacs</div><div class="res-box-value" id="niger1_sac">--</div></div><div class="res-box"><div class="res-box-label">Reliquat</div><div class="res-box-value" id="niger1_reste">--</div></div><div></div></div></div>
+<div class="subtotals"><div class="st-box"><div class="st-label">Total / ha</div><div class="st-value" id="t1ha">--</div></div><div class="st-box"><div class="st-label">Total surface</div><div class="st-value" id="t1surf">--</div></div></div>
+</div></div></div>
+
+<div class="page" id="page-c2"><div class="card"><div class="card-head amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 17.93V18a1 1 0 0 0-2 0v1.93A8 8 0 0 1 4.07 13H6a1 1 0 0 0 0-2H4.07A8 8 0 0 1 11 4.07V6a1 1 0 0 0 2 0V4.07A8 8 0 0 1 19.93 11H18a1 1 0 0 0 0 2h1.93A8 8 0 0 1 13 19.93z"/></svg>Couvert 2 — Avant feverole</div><div class="card-body">
+<div class="surf-row"><label>Surface</label><input type="number" id="surf2" value="1" min="0.1" step="0.1" inputmode="decimal" oninput="calc()"><span class="unit">ha</span></div>
+<div class="sp-item"><div class="sp-header"><div><div class="sp-name">Niger</div><div class="sp-ref">ref : 4 kg/ha</div></div></div><div class="sp-inputs"><div class="sp-field"><div class="sp-field-label">kg/ha</div><input type="number" class="num-in" id="niger2" value="4" min="0" step="0.5" inputmode="decimal" oninput="calc()"></div><div class="sp-field"><div class="sp-field-label">Sac (kg)</div><input type="number" class="sac-in" id="sac_niger2" value="10" min="1" step="1" inputmode="numeric" oninput="calc()"></div><div class="sp-field"><div class="sp-field-label">Total</div><div class="res-box"><div class="res-box-value" id="niger2_kg">--</div></div></div></div><div class="sp-results"><div class="res-box"><div class="res-box-label">Nb sacs</div><div class="res-box-value" id="niger2_sac">--</div></div><div class="res-box"><div class="res-box-label">Reliquat</div><div class="res-box-value" id="niger2_reste">--</div></div><div></div></div></div>
+<div class="sp-item"><div class="sp-header"><div><div class="sp-name">Phacelie</div><div class="sp-ref">ref : 4 kg/ha</div></div></div><div class="sp-inputs"><div class="sp-field"><div class="sp-field-label">kg/ha</div><input type="number" class="num-in" id="phacelie2" value="4" min="0" step="0.5" inputmode="decimal" oninput="calc()"></div><div class="sp-field"><div class="sp-field-label">Sac (kg)</div><input type="number" class="sac-in" id="sac_phacelie2" value="10" min="1" step="1" inputmode="numeric" oninput="calc()"></div><div class="sp-field"><div class="sp-field-label">Total</div><div class="res-box"><div class="res-box-value" id="phacelie2_kg">--</div></div></div></div><div class="sp-results"><div class="res-box"><div class="res-box-label">Nb sacs</div><div class="res-box-value" id="phacelie2_sac">--</div></div><div class="res-box"><div class="res-box-label">Reliquat</div><div class="res-box-value" id="phacelie2_reste">--</div></div><div></div></div></div>
+<div class="subtotals"><div class="st-box"><div class="st-label">Total / ha</div><div class="st-value" id="t2ha">--</div></div><div class="st-box"><div class="st-label">Total surface</div><div class="st-value" id="t2surf">--</div></div></div>
+</div></div></div>
+
+<div class="page" id="page-recap"><div class="card"><div class="card-head dark"><svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>Commande — Recapitulatif</div><div class="card-body">
+<div id="recap-rows"></div>
+<div class="grand-total"><div class="gt-box"><div class="gt-label">Total kg</div><div class="gt-value" id="grand-kg">--</div></div><div class="gt-box"><div class="gt-label">Total sacs</div><div class="gt-value green" id="grand-sacs">--</div></div></div>
+</div></div>
+<button class="action-btn" onclick="window.print()">Imprimer / Exporter PDF</button>
+<button class="action-btn secondary" onclick="resetAll()">Reinitialiser tout</button>
+</div>
+
+<script>
+var species=[{id:'avoine',label:'Avoine rude',cover:1},{id:'vesce',label:'Vesce',cover:1},{id:'phacelie1',label:'Phacelie (C1)',cover:1},{id:'cruc',label:'Crucifere',cover:1},{id:'niger1',label:'Niger (C1)',cover:1},{id:'niger2',label:'Niger (C2)',cover:2},{id:'phacelie2',label:'Phacelie (C2)',cover:2}];
+function showPage(p,btn){document.querySelectorAll('.page').forEach(function(x){x.classList.remove('active')});document.querySelectorAll('.tab-btn').forEach(function(x){x.classList.remove('active')});document.getElementById('page-'+p).classList.add('active');btn.classList.add('active');if(p==='recap')calc()}
+function selectCruc(chip,val){document.querySelectorAll('.radio-chip').forEach(function(c){c.classList.remove('selected')});chip.classList.add('selected');chip.querySelector('input').checked=true;document.getElementById('cruc').value=val;calc()}
+function calc(){var s1=parseFloat(document.getElementById('surf1').value)||1;var s2=parseFloat(document.getElementById('surf2').value)||1;var grandKg=0,grandSacs=0,recapHtml='';species.forEach(function(sp){var surf=sp.cover===1?s1:s2;var dose=parseFloat(document.getElementById(sp.id).value)||0;var sacKg=parseFloat(document.getElementById('sac_'+sp.id).value)||1;var totalKg=+(dose*surf).toFixed(2);var full=totalKg>0?Math.floor(totalKg/sacKg):0;var reste=+(totalKg-full*sacKg).toFixed(2);var nbSacs=full+(reste>0?1:0);var kgEl=document.getElementById(sp.id+'_kg');var sacEl=document.getElementById(sp.id+'_sac');var resteEl=document.getElementById(sp.id+'_reste');if(kgEl)kgEl.textContent=totalKg>0?totalKg.toFixed(1)+' kg':'--';if(sacEl)sacEl.textContent=totalKg>0?nbSacs:'--';if(resteEl){if(totalKg>0&&reste>0)resteEl.textContent='+'+reste.toFixed(1)+' kg';else if(totalKg>0)resteEl.textContent='pile';else resteEl.textContent='--'}if(totalKg>0){grandKg=+(grandKg+totalKg).toFixed(2);grandSacs+=nbSacs;var rl=reste>0?reste.toFixed(1)+' kg':'pile';recapHtml+='<div class="recap-item"><div><div class="ri-name">'+sp.label+'</div><div class="ri-details">'+totalKg.toFixed(1)+' kg - '+rl+'</div></div><div><div class="ri-sacs">'+nbSacs+' sac'+(nbSacs>1?'s':'')+'</div></div></div>'}});var c1=['avoine','vesce','phacelie1','cruc','niger1'];var c2=['niger2','phacelie2'];var t1ha=c1.reduce(function(a,id){return a+(parseFloat(document.getElementById(id).value)||0)},0);var t2ha=c2.reduce(function(a,id){return a+(parseFloat(document.getElementById(id).value)||0)},0);document.getElementById('t1ha').textContent=t1ha.toFixed(1)+' kg/ha';document.getElementById('t1surf').textContent=(t1ha*s1).toFixed(1)+' kg';document.getElementById('t2ha').textContent=t2ha.toFixed(1)+' kg/ha';document.getElementById('t2surf').textContent=(t2ha*s2).toFixed(1)+' kg';document.getElementById('recap-rows').innerHTML=recapHtml||'<div class="empty-state">Aucune donnee</div>';document.getElementById('grand-kg').textContent=grandKg.toFixed(1)+' kg';document.getElementById('grand-sacs').textContent=grandSacs+' sacs';saveState()}
+function resetAll(){if(confirm('Reinitialiser toutes les valeurs ?')){document.getElementById('surf1').value=1;document.getElementById('surf2').value=1;document.getElementById('avoine').value=10;document.getElementById('vesce').value=12;document.getElementById('phacelie1').value=3;document.getElementById('cruc').value=2;document.getElementById('niger1').value=0;document.getElementById('niger2').value=4;document.getElementById('phacelie2').value=4;document.getElementById('sac_avoine').value=25;document.getElementById('sac_vesce').value=25;document.getElementById('sac_phacelie1').value=10;document.getElementById('sac_cruc').value=10;document.getElementById('sac_niger1').value=10;document.getElementById('sac_niger2').value=10;document.getElementById('sac_phacelie2').value=10;localStorage.removeItem('couvertsState');calc()}}
+function saveState(){var state={};document.querySelectorAll('.num-in,.sac-in,.surf-row input').forEach(function(i){if(i.id)state[i.id]=i.value});try{localStorage.setItem('couvertsState',JSON.stringify(state))}catch(e){}}
+function loadState(){try{var state=JSON.parse(localStorage.getItem('couvertsState'));if(state){Object.keys(state).forEach(function(id){var el=document.getElementById(id);if(el)el.value=state[id]})}}catch(e){}}
+function checkInstallBanner(){var isIos=/iphone|ipad|ipod/i.test(navigator.userAgent);var isStandalone=window.navigator.standalone===true;var dismissed=localStorage.getItem('installDismissed');if(isIos&&!isStandalone&&!dismissed)document.getElementById('installBanner').style.display='block'}
+loadState();calc();checkInstallBanner();
+</script>
+</body>
+</html>
