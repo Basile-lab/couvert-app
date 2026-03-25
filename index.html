@@ -178,9 +178,10 @@ function calc() {
       grandKg = +(grandKg + totalKg).toFixed(2);
       grandSacs += nbSacs;
       var gk = sp.group;
-      if (!grouped[gk]) grouped[gk] = { label: sp.groupLabel, kg: 0, sacs: 0 };
+      if (!grouped[gk]) grouped[gk] = { label: sp.groupLabel, kg: 0, sacs: 0, reste: 0 };
       grouped[gk].kg = +(grouped[gk].kg + totalKg).toFixed(2);
       grouped[gk].sacs += nbSacs;
+      grouped[gk].reste = +(grouped[gk].reste + reste).toFixed(2);
     }
   });
 
@@ -189,7 +190,7 @@ function calc() {
   order.forEach(function(key) {
     if (grouped[key]) {
       var d = grouped[key];
-      recapHtml += '<div class="recap-item"><div><div class="ri-name">' + d.label + '</div><div class="ri-details">' + d.kg.toFixed(1) + ' kg</div></div><div><div class="ri-sacs">' + d.sacs + ' sac' + (d.sacs > 1 ? 's' : '') + '</div></div></div>';
+      recapHtml += '<div class="recap-item"><div><div class="ri-name">' + d.label + '</div><div class="ri-details">' + d.kg.toFixed(1) + ' kg | reliquat ' + (d.reste > 0 ? d.reste.toFixed(1) + ' kg' : 'pile') + '</div></div><div><div class="ri-sacs">' + d.sacs + ' sac' + (d.sacs > 1 ? 's' : '') + '</div></div></div>';
     }
   });
 
